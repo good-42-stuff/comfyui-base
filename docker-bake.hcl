@@ -17,8 +17,8 @@ target "regular" {
   inherits = ["common"]
   dockerfile = "Dockerfile"
   tags = [
-    "runpod/comfyui:${TAG}",
-    "runpod/comfyui:latest",
+    "good-42-stuff/comfyui:${TAG}",
+    "good-42-stuff/comfyui:latest",
   ]
 }
 
@@ -26,7 +26,7 @@ target "regular" {
 target "dev" {
   inherits = ["common"]
   dockerfile = "Dockerfile"
-  tags = ["runpod/comfyui:dev"]
+  tags = ["good-42-stuff/comfyui:dev"]
   output = ["type=docker"]
 }
 
@@ -34,13 +34,13 @@ target "dev" {
 target "devpush" {
   inherits = ["common"]
   dockerfile = "Dockerfile"
-  tags = ["runpod/comfyui:dev"]
+  tags = ["good-42-stuff/comfyui:dev"]
 }
 
 target "devpush5090" {
   inherits = ["common"]
   dockerfile = "Dockerfile.5090"
-  tags = ["runpod/comfyui:dev-5090"]
+  tags = ["good-42-stuff/comfyui:dev-5090"]
 }
 
 # RTX 5090 optimized image (CUDA 12.8 + latest PyTorch build)
@@ -48,7 +48,7 @@ target "rtx5090" {
   inherits = ["common"]
   dockerfile = "Dockerfile.5090"
   tags = [
-    "runpod/comfyui:${TAG}-5090",
-    "runpod/comfyui:latest-5090",
+    "good-42-stuff/comfyui:${TAG}-5090",
+    "good-42-stuff/comfyui:latest-5090",
   ]
 }
