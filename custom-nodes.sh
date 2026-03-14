@@ -26,14 +26,4 @@ while IFS="|" read -r url recursive || [[ -n "$url" ]]; do
     if [ -f "${PWD}/$repo_name/requirements.txt" ]; then
         pip install --no-cache-dir --upgrade-strategy only-if-needed -r "${PWD}/$repo_name/requirements.txt"
     fi
-    
 done < "$CUSTOM_NODES_CONF"
-
-# pip install --no-cache-dir --upgrade-strategy only-if-needed \
-#     -r "${COMFYUI}/requirements.txt" \
-#     einops==0.8.0 \
-#     sageattention==1.0.6
-
-# python "${COMFYUI}/custom_nodes/x-flux-comfyui/setup.py"
-# python "${COMFYUI}/custom_nodes/ComfyUI-Impact-Pack/install.py"
-# python "${COMFYUI}/custom_nodes/ComfyUI-Frame-Interpolation/install.py"

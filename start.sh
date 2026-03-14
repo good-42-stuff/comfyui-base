@@ -151,6 +151,8 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
     fi
     
     mkdir -p "$COMFYUI_DIR/custom_nodes"
+    cp /custom-nodes.sh "$COMFYUI_DIR/custom_nodes/"
+    cp /custom-nodes.conf "$COMFYUI_DIR/custom_nodes/"
     cd "$COMFYUI_DIR/custom_nodes"
     ./custom-nodes.sh
     for node_dir in */; do \
@@ -213,6 +215,13 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
                 fi
             fi
         done
+    fi
+
+    # Example workflows
+    if [ ! -d "${COMFYUI}/user/default/workflows" ]; then
+        mkdir -p "${COMFYUI}/user/default/workflows"
+        cp -r ./workflows/* "${COMFYUI}/user/default/workflows/"
+        chmod -R 644 "${COMFYUI}/user/default/workflows/"
     fi
 else
     # Just activate the existing venv

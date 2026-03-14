@@ -144,13 +144,15 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 
 # Create workspace directory
 RUN mkdir -p /workspace/runpod-slim
+
+# Copy start scripts
 WORKDIR /workspace/runpod-slim
+COPY start.sh /start.sh
+COPY custom-nodes.conf /custom-nodes.conf
+COPY custom-nodes.sh /custom-nodes.sh
 
 # Expose ports
 EXPOSE 8188 22 8888 8080
-
-# Copy start script
-COPY start.sh /start.sh
 
 # Set Python 3.12 as default
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 && \
