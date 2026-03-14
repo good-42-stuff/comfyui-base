@@ -150,20 +150,15 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
         git clone https://github.com/comfyanonymous/ComfyUI.git
     fi
     
-    # Install ComfyUI-Manager if not present
-    if [ ! -d "$COMFYUI_DIR/custom_nodes/ComfyUI-Manager" ]; then
-        echo "Installing ComfyUI-Manager..."
-        mkdir -p "$COMFYUI_DIR/custom_nodes"
-        cd "$COMFYUI_DIR/custom_nodes"
-        git clone https://github.com/ltdrdata/ComfyUI-Manager.git
-    fi
-
-    # Install additional custom nodes
-    CUSTOM_NODES=(
-        "https://github.com/kijai/ComfyUI-KJNodes"
-        "https://github.com/MoonGoblinDev/Civicomfy"
-        "https://github.com/MadiatorLabs/ComfyUI-RunpodDirect"
-    )
+    mkdir -p "$COMFYUI_DIR/custom_nodes"
+    cd "$COMFYUI_DIR/custom_nodes"
+    ./custom-nodes.sh
+    for node_dir in */; do \
+        if [ -f "$node_dir/requirements.txt" ]; then \
+            echo "Installing requirements for $node_dir"; \
+            python3.12 -m pip install --no-cache-dir -r "$node_dir/requirements.txt" || true; \
+        fi; \
+    done
 
     for repo in "${CUSTOM_NODES[@]}"; do
         repo_name=$(basename "$repo")

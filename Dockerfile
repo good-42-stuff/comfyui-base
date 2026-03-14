@@ -39,11 +39,15 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
 ENV PATH=/usr/local/cuda/bin:${PATH}
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64
 
-# Clone ComfyUI to get requirements
+# Install ComfyUI to get requirements
 WORKDIR /tmp/build
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
-# Clone custom nodes to get their requirements
+WORKDIR /tmp/build/ComfyUI
+RUN python3.12 -m pip install --no-cache-dir -r requirements.txt && \
+    python3.12 -m pip install --no-cache-dir GitPython opencv-python
+
+# Install custom nodes to get their requirements
 WORKDIR /tmp/build/ComfyUI/custom_nodes
 COPY ./custom-nodes.conf ./custom-nodes.conf
 COPY ./custom-nodes.sh ./custom-nodes.sh
@@ -53,18 +57,15 @@ RUN ./custom-nodes.sh
 RUN python3.12 -m pip install --no-cache-dir \
     torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 
-WORKDIR /tmp/build/ComfyUI
-RUN python3.12 -m pip install --no-cache-dir -r requirements.txt && \
-    python3.12 -m pip install --no-cache-dir GitPython opencv-python
 
 # Install custom node dependencies
-WORKDIR /tmp/build/ComfyUI/custom_nodes
-RUN for node_dir in */; do \
-        if [ -f "$node_dir/requirements.txt" ]; then \
-            echo "Installing requirements for $node_dir"; \
-            python3.12 -m pip install --no-cache-dir -r "$node_dir/requirements.txt" || true; \
-        fi; \
-    done
+# WORKDIR /tmp/build/ComfyUI/custom_nodes
+# RUN for node_dir in */; do \
+#         if [ -f "$node_dir/requirements.txt" ]; then \
+#             echo "Installing requirements for $node_dir"; \
+#             python3.12 -m pip install --no-cache-dir -r "$node_dir/requirements.txt" || true; \
+#         fi; \
+#     done
 
 # ============================================================================
 # Stage 2: Runtime - Clean image with pre-installed packages

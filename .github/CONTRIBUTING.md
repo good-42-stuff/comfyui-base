@@ -19,8 +19,8 @@ Create a new release of the image:
    - Publishing a GitHub Release with tag `vX.Y.Z`, or
    - Manually running the “Release” workflow and providing `version = vX.Y.Z`.
 3. The “Release” workflow will build and push both image variants via `docker-bake.hcl`:
-   - `good-42-stuff/comfyui:vX.Y.Z` and `good-42-stuff/comfyui:latest`
-   - `good-42-stuff/comfyui:vX.Y.Z-5090` and `good-42-stuff/comfyui:latest-5090`
+   - `good42stuff/comfyui:vX.Y.Z` and `good42stuff/comfyui:latest`
+   - `good42stuff/comfyui:vX.Y.Z-5090` and `good42stuff/comfyui:latest-5090`
 
 Notes:
 
@@ -30,14 +30,14 @@ Notes:
 Troubleshooting releases:
 
 - If the workflow fails on tags, ensure you didn’t try to override `tags` via bake `--set`.
-- Confirm Docker Hub secrets exist and have push permissions to `good-42-stuff/comfyui`.
+- Confirm Docker Hub secrets exist and have push permissions to `good42stuff/comfyui`.
 
 ## Release process
 
 Releases are tag-driven and/or GitHub Releases. The workflow builds and pushes both variants:
 
-- `good-42-stuff/comfyui:vX.Y.Z` and `good-42-stuff/comfyui:latest`
-- `good-42-stuff/comfyui:vX.Y.Z-5090` and `good-42-stuff/comfyui:latest-5090`
+- `good42stuff/comfyui:vX.Y.Z` and `good42stuff/comfyui:latest`
+- `good42stuff/comfyui:vX.Y.Z-5090` and `good42stuff/comfyui:latest-5090`
 
 Steps:
 

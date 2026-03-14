@@ -35,15 +35,15 @@ Use Docker Buildx Bake with the provided HCL file.
 
 - `regular` (default production):
   - Dockerfile: `Dockerfile`
-  - Tag: `good-42-stuff/comfyui:${TAG}` (defaults to `slim`)
+  - Tag: `good42stuff/comfyui:${TAG}` (defaults to `slim`)
   - Platform: `linux/amd64`
 - `dev` (local testing):
   - Dockerfile: `Dockerfile`
-  - Tag: `good-42-stuff/comfyui:dev`
+  - Tag: `good42stuff/comfyui:dev`
   - Output: local docker image (not pushed)
 - `rtx5090` (CUDA 12.8 + latest torch):
   - Dockerfile: `Dockerfile.5090`
-  - Tag: `good-42-stuff/comfyui:${TAG}-5090`
+  - Tag: `good42stuff/comfyui:${TAG}-5090`
 
 Example commands:
 
@@ -124,7 +124,7 @@ Preinstalled custom nodes (initial set):
 ## Dev Conventions
 
 - Keep images lean. Prefer runtime install via `uv` over baking large wheels unless required (e.g., 5090 torch wheels).
-- Avoid changing ports; they are referenced by external templates (good-42-stuff/UI tooling).
+- Avoid changing ports; they are referenced by external templates (good42stuff/UI tooling).
 - Use Python 3.12. Do not downgrade in scripts.
 - When adding new env vars needed by downstream processes, ensure they are exported in `export_env_vars()` the same way as others.
 - For new custom nodes, ensure idempotent installs: the loop checks for `requirements.txt`, `install.py`, and `setup.py`.
@@ -139,7 +139,7 @@ Preinstalled custom nodes (initial set):
     -e PUBLIC_KEY="$(cat ~/.ssh/id_rsa.pub)" \
     -e JUPYTER_PASSWORD=yourtoken \
     -v "$PWD/workspace":/workspace \
-    good-42-stuff/comfyui:dev
+    good42stuff/comfyui:dev
   ```
 - Mount a host `workspace` to persist ComfyUI, args, and FileBrowser DB.
 
