@@ -3,6 +3,7 @@ set -e  # Exit the script if any statement returns a non-true return value
 
 COMFYUI_DIR="/workspace/runpod-slim/ComfyUI"
 VENV_DIR="$COMFYUI_DIR/.venv"
+WORKFLOW_DIR="$COMFYUI_DIR/user/default/workflows"
 FILEBROWSER_CONFIG="/root/.config/filebrowser/config.json"
 DB_FILE="/workspace/runpod-slim/filebrowser.db"
 
@@ -142,7 +143,7 @@ fi
 
 # Setup ComfyUI if needed
 if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
-    echo "First time setup: Installing ComfyUI and dependencies..."
+    echo "First time setup: Installing ComfyUI, dependencies, workflow examples..."
     
     # Clone ComfyUI if not present
     if [ ! -d "$COMFYUI_DIR" ]; then
@@ -155,22 +156,13 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
     cp /custom-nodes.conf "$COMFYUI_DIR/custom_nodes/"
     cd "$COMFYUI_DIR/custom_nodes"
     ./custom-nodes.sh
-    for node_dir in */; do \
-        if [ -f "$node_dir/requirements.txt" ]; then \
-            echo "Installing requirements for $node_dir"; \
-            python3.12 -m pip install --no-cache-dir -r "$node_dir/requirements.txt" || true; \
-        fi; \
-    done
+    # for node_dir in */; do \
+    #     if [ -f "$node_dir/requirements.txt" ]; then \
+    #         echo "Installing requirements for $node_dir"; \
+    #         python3.12 -m pip install --no-cache-dir  --upgrade-strategy only-if-needed -r "$node_dir/requirements.txt" || true; \
+    #     fi; \
+    # done
 
-    for repo in "${CUSTOM_NODES[@]}"; do
-        repo_name=$(basename "$repo")
-        if [ ! -d "$COMFYUI_DIR/custom_nodes/$repo_name" ]; then
-            echo "Installing $repo_name..."
-            cd "$COMFYUI_DIR/custom_nodes"
-            git clone "$repo"
-        fi
-    done
-    
     # Create and setup virtual environment if not present
     if [ ! -d "$VENV_DIR" ]; then
         cd $COMFYUI_DIR
@@ -184,7 +176,7 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
 
         # Update ComfyUI dependencies (frontend, etc.)
         echo "Installing ComfyUI requirements..."
-        pip install -r "$COMFYUI_DIR/requirements.txt"
+        pip install -r --upgrade-strategy only-if-needed "$COMFYUI_DIR/requirements.txt"
 
         echo "Base packages (torch, numpy, etc.) available from system site-packages"
         echo "Installing custom node dependencies..."
@@ -199,7 +191,7 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
                 # Check for requirements.txt
                 if [ -f "requirements.txt" ]; then
                     echo "Installing requirements.txt for $node_dir"
-                    pip install --no-cache-dir -r requirements.txt
+                    pip install --no-cache-dir --upgrade-strategy only-if-needed -r requirements.txt
                 fi
 
                 # Check for install.py
@@ -218,11 +210,17 @@ if [ ! -d "$COMFYUI_DIR" ] || [ ! -d "$VENV_DIR" ]; then
     fi
 
     # Example workflows
-    if [ ! -d "${COMFYUI}/user/default/workflows" ]; then
-        mkdir -p "${COMFYUI}/user/default/workflows"
-        cp -r ./workflows/* "${COMFYUI}/user/default/workflows/"
-        chmod -R 644 "${COMFYUI}/user/default/workflows/"
-    fi
+    mkdir -p "$WORKFLOW_DIR"
+    cp -r /workflows/*.json "${WORKFLOW_DIR}/"
+    find "$WORKFLOW_DIR" -type d -exec chmod 755 {} +
+    find "$WORKFLOW_DIR" -type f -exec chmod 644 {} +
+
+    # Example assets
+    mkdir -p "${COMFYUI}/input"
+    cp /assets/* "${COMFYUI}/input/"
+    chmod 755 "${COMFYUI}/input"
+    find "${COMFYUI}/input" -type f -exec chmod 644 {} +
+    find "${COMFYUI}/input" -type d -exec chmod 755 {} +
 else
     # Just activate the existing venv
     source $VENV_DIR/bin/activate

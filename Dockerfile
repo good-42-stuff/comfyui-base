@@ -151,6 +151,10 @@ COPY start.sh /start.sh
 COPY custom-nodes.conf /custom-nodes.conf
 COPY custom-nodes.sh /custom-nodes.sh
 
+# Workflow examples and assests
+COPY workflows /workflows
+COPY assets /assets
+
 # Expose ports
 EXPOSE 8188 22 8888 8080
 

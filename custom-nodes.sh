@@ -22,8 +22,4 @@ while IFS="|" read -r url recursive || [[ -n "$url" ]]; do
     [ "$recursive" == "y" ] && GIT_CMD="$GIT_CMD --recursive"
 
     $GIT_CMD "$url" "$target_path"
-
-    if [ -f "${PWD}/$repo_name/requirements.txt" ]; then
-        pip install --no-cache-dir --upgrade-strategy only-if-needed -r "${PWD}/$repo_name/requirements.txt"
-    fi
 done < "$CUSTOM_NODES_CONF"
